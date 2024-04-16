@@ -21,7 +21,19 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   // reporter: 'html',
-  reporter: process.env.CI ? [["@argos-ci/playwright/reporter"]] : "html",
+  reporter: process.env.CI
+    ? [
+        [
+          "@argos-ci/playwright/reporter",
+          {
+            // Enable upload to Argos only when it runs on CI.
+            uploadToArgos: !!process.env.CI,
+            // Set your Argos token (required only if you don't use GitHub Actions).
+            token: "ab34162db3317d89dede50cb8f72339eae51b1ba",
+          },
+        ],
+      ]
+    : "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
